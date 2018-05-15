@@ -17,33 +17,63 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-set -x # DEBUG
+#set -x # DEBUG
 
 ##
 # Deploy a smart contract using Truffle.
-# FIXME this is very contract specific currently
 #
-# Usage: contract.sh source account network [args ...]
+# Usage: contract.sh github-repo-url account-id
 ##
 
 # set variables
-SOURCE=$1
-ACCOUNT=$2
-NETWORK=$3
-shift ; shift ; shift
-ARGS="$@"
+GITHUB_REPO_URL=$1
+ACCOUNT_ID=$2
+ID=$$
 
 # clone github repository
-mkdir contracts
-cd contracts
-git clone ${SOURCE} .
+[ -d /contracts ] || mkdir /contracts
+git clone "${GITHUB_REPO_URL}" /contracts/${ID} > /dev/null 2>&1
+cd /contracts/${ID}
 
 # install required node modules
-npm install
+npm install dotenv@5.0.0 > /dev/null 2>&1
+npm install > /dev/null 2>&1
 
 # set required environment
-export SETH_DEPLOY_ACCOUNT_ID=${ACCOUNT}
-export SETH_OWNER_ACCOUNT_ID=${ACCOUNT}
+>> .env <<EOF
+SETH_DEPLOY_ACCOUNT_ID=${ACCOUNT_ID}
+SETH_RPC_HOST=${SETH_RPC_HOST}
+EOF
+
+# set sawtooth network configuration
+> sawtooth.js <<EOF
+    'sawtooth-${ID}': {
+      from: '0x' + process.env.SETH_DEPLOY_ACCOUNT_ID,
+      network_id: '19',
+      host: process.env.SETH_RPC_HOST,
+      port: 3030
+    },
+EOF
+
+# update truffle configuration
+if [ ! -f truffle.js ] ; then
+  > truffle.bak <<EOF
+module.exports = {
+  networks: {
+  }
+}
+EOF
+else
+  mv truffle.js truffle.bak
+fi
+(
+  if ! grep -q "dotenv" truffle.bak ; then
+    echo "require('dotenv').config();"
+  fi
+  sed "/networks.*:.*{/r sawtooth.js" truffle.bak
+) > truffle.js
+rm truffle.bak
 
 # deploy
-truffle deploy --network ${NETWORK} --verbose-rpc
+truffle compile > /dev/null 2>&1
+truffle deploy --network sawtooth-${ID}

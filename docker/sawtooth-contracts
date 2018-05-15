@@ -28,4 +28,4 @@ RUN apt-get install -y git nodejs \
 
 COPY ./scripts/contract.sh /bin/contract.sh
 
-ENTRYPOINT [ "contract.sh" ]
+VOLUME /contracts
