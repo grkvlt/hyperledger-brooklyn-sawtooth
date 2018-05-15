@@ -437,12 +437,14 @@ brooklyn.catalog:
                 HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION: "0.5.0-SNAPSHOT"
                 REPOSITORY: $brooklyn:config("sawtooth.repository")
                 SAWTOOTH_SETH_RPC: $brooklyn:descendant("sawtooth-seth-rpc").config("container.name")
+                NETWORK: $brooklyn:config("sawtooth.network")
               command: |
                 IMAGE=${REPOSITORY}/sawtooth-contracts:${HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION}
                 docker pull ${IMAGE}
                 docker run \
                     --rm \
-                    -e SETH_RPC_HOST=${SAWTOOTH_SETH_RPC} \
+                    -e SETH_RPC_HOST="${SAWTOOTH_SETH_RPC}.${NETWORK}" \
+                    --network ${NETWORK} \
                     ${IMAGE} \
                     contract.sh ${source} ${account}
 

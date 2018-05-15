@@ -40,13 +40,13 @@ npm install dotenv@5.0.0 > /dev/null 2>&1
 npm install > /dev/null 2>&1
 
 # set required environment
->> .env <<EOF
+cat >> .env <<EOF
 SETH_DEPLOY_ACCOUNT_ID=${ACCOUNT_ID}
 SETH_RPC_HOST=${SETH_RPC_HOST}
 EOF
 
 # set sawtooth network configuration
-> sawtooth.js <<EOF
+cat > sawtooth.js <<EOF
     'sawtooth-${ID}': {
       from: '0x' + process.env.SETH_DEPLOY_ACCOUNT_ID,
       network_id: '19',
@@ -57,7 +57,7 @@ EOF
 
 # update truffle configuration
 if [ ! -f truffle.js ] ; then
-  > truffle.bak <<EOF
+  cat > truffle.bak <<EOF
 module.exports = {
   networks: {
   }
