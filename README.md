@@ -7,7 +7,7 @@ Please note that this is an early access release of the Brooklyn Sawtooth platfo
 
 ## Purpose
 
-Our motivation is to simplify the deployment of a fully Hyperledger Sawtooth platform using Apache Brooklyn to automate this in a wide range of configurations and on a wide range of environments. We intend to offer this to the Hyperledger community as an incubator project along the same lines as [Hyperledger Caliper](https://www.hyperledger.org/projects/caliper) ultimately providing similar blueprints for [Hyperledger Fabric](https://www.hyperledger.org/projects/fabric) and potentially other Hyperledger frameworks.
+Our motivation is to simplify the deployment of a fully functional Hyperledger Sawtooth platform using Apache Brooklyn to automate this in a wide range of configurations and on a wide range of environments. We intend to offer this to the Hyperledger community as an incubator project along the same lines as [Hyperledger Caliper](https://www.hyperledger.org/projects/caliper) ultimately providing similar blueprints for [Hyperledger Fabric](https://www.hyperledger.org/projects/fabric) and potentially other Hyperledger frameworks.
 
 ## Overview
 
