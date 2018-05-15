@@ -72,4 +72,4 @@ lives inside Docker containers running on Docker host VMs that are provisioned a
 
 
 ---
-Copyright 2018 Blockchain Technology Partners Limited; Licensed under the [Apache License, Version 2.0](./LICENSE)
+Copyright 2018 Blockchain Technology Partners Limited; Licensed under the [Apache License, Version 2.0](../LICENSE)
