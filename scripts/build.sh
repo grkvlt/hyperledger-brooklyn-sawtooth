@@ -76,8 +76,7 @@ docker build . \
 # test or deploy the current build
 case "$1" in
     test)
-        docker run \
-            -p 8082:8081 \
+        docker run -P \
             --volume ~/.ssh:/keys \
             --volume ~/blueprints:/blueprints \
             --name brooklyn \

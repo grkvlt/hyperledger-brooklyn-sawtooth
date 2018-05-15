@@ -22,21 +22,40 @@
 ##
 # Gets the current status of a running Brooklyn Sawtooth application.
 #
-# Usage: status.sh [application-name]
+# Usage: status.sh [application-name [server-node-name]]
 ##
 
 APP=${1:-sawtooth-platform-application}
+NODE=${2:-sawtooth-platform-server-node}
 
 # get sensor data
-host_address=$(br app ${APP} entity sawtooth-platform-server-node sensor host.address)
-seth_account=$(br app ${APP} entity sawtooth-platform-server-node sensor sawtooth.seth.account)
-administrator_id=$(br app ${APP} entity sawtooth-platform-server-node sensor sawtooth.next-directory.administrator.id)
+host_address=$(br app ${APP} entity ${NODE} sensor host.address)
+seth_account=$(br app ${APP} entity ${NODE} sensor sawtooth.seth.account)
+administrator_id=$(br app ${APP} entity ${NODE} sensor sawtooth.next-directory.administrator.id)
 
 # output json data
 cat <<EOF
 {
   "host.address": "${host_address}",
   "seth.account": "${seth_account}",
-  "administrator.id": "${administrator_id}"
+  "administrator.id": "${administrator_id}",
+  "links": {
+EOF
+
+# output links
+eol="," i=0 svcs=(
+  grafana rest-api seth-rpc next-directory-api next-directory-ui rethinkdb explorer
+)
+while (( i < ${#svcs[@]} )) ; do
+  svc=${svcs[$i]}
+  uri=$(br app ${APP} entity ${NODE} sensor sawtooth.${svc}.uri)
+  if (( ++i >= ${#svcs[@]} )) ; then
+    eol=""
+  fi
+  echo "    \"${svc}.uri\": \"${uri}\"${eol}"
+done
+
+cat <<EOF
+  }
 }
 EOF
