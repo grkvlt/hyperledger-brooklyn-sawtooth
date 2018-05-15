@@ -61,15 +61,15 @@ else
   exit 1
 fi
 
-# add jar files to catalog
+# add jar files to catalog (oldest first)
 echo "[>] add catalog libraries"
-for jar in $(ls -1 ${CATALOG_DIR}/*.jar) ; do
+for jar in $(ls -tr1 ${CATALOG_DIR}/*.jar) ; do
   add ${jar}
 done
 
-# add bom files to catalog
+# add bom files to catalog (oldest first)
 echo "[>] add catalog blueprints"
-for bom in $(ls -1 ${CATALOG_DIR}/*.bom) ; do
+for bom in $(ls -tr1 ${CATALOG_DIR}/*.bom) ; do
   add ${bom}
 done
 
