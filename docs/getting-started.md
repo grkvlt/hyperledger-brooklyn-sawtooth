@@ -19,10 +19,8 @@ Navigate to the root directory of this repository and run the following command 
 
     $ docker run -d \
             -p 8081:8081 \
-            -p 8443:8443 \
             -v ~/keys:/keys \
             -v $(pwd)/examples:/blueprints \
-            -v /dev/urandom:/dev/random \
             --name brooklyn \
             blockchaintp/brooklyn-sawtooth:0.5.0-SNAPSHOT
 
