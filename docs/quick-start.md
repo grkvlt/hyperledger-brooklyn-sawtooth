@@ -1,17 +1,7 @@
-Hyperledger Brooklyn Sawtooth
-=============================
+Quick Start
+===========
 
-This repository contains [Apache Brooklyn](https://brooklyn.apache.org/) blueprints for a [Hyperledger Sawtooth](https://www.hyperledger.org/projects/sawtooth) blockchain platform using [Docker](https://www.docker.com/).
-
-The [Sawtooth platform architecture](./docs/platform.md) consists of a number of separate [components](./docs/components.md) that can be used as the basis for building blockchain applications. The [getting started guide](./docs/getting-started.md) and [further installation guide](./docs/installation.md) show how to start a copy of the platform. This is an early access release of the Brooklyn sawtooth platform, and is intended for development use and testing, rather than for production deployments. However, we are adding more features and configuration options to the platform, that will be useful for building production ready applications.
-
-## Motivation
-
-Our motivation is to simplify the deployment of Hyperledger Sawtooth using Apache Brooklyn to automate this in a wide range of configurations and on a wide range of environments. We intend to offer this to the Hyperledger community as an incubator project along the same lines as [Hyperledger Caliper](https://www.hyperledger.org/projects/caliper) ultimately providing similar blueprints for [Hyperledger Fabric](https://www.hyperledger.org/projects/fabric) and potentially other Hyperledger frameworks.
-
-## Getting Started
-
-This guide will cover deploying Hyperledger Sawtooth to AWS using an Apache Brooklyn server running in a Docker container on your local machine. This blueprint can also deploy Sawtooth to other clouds, and Apache Brooklyn can be run and configured differently. See the [complete instructions](./docs/getting-started.md) for more information.
+This guide is intended for users who are familiar with Docker and Brooklyn and who already have an AWS EC2 account available with appropriate keys and credentials. See the [getting started instructions](./getting-started.md) for a more detailed, step-by-step guide.
 
 The only software pre-requisite is a recent version of Docker installed, and you must have credentials and SSH keys available to access the AWS EC2 cloud. You must also have an AWS security group configured which allows access to ports _22_, _3000_, _3030_, _4200_, _4201_, _8000_, _8080_, _8090_ and _9090_ and allows machines in the same group to communicate on all TCP and UDP ports.
 
@@ -33,9 +23,7 @@ Note the `/keys` and `/blueprints` volumes being mounted from directories on the
 
 Once the Brooklyn server has started up, the console UI will be accessible at [`http://localhost:8081/`](http://localhost:8081/) and you can also use the `br` command-line tool either on the Docker container or remotely after logging in.
 
-Now you should edit the [example application blueprint](./examples/example.yaml) so that it works with your own AWS account. If you need extra help with this step, see the the [complete instructions](./docs/getting-started.md) for more details.
-
-Set the values of `identity` and `credential` with your access key ID and secret key and update the `keyPair` name with a key pair that is available on your AWS account and set the `loginUser.privateKeyFile` and `privateKeyFile` values to point to the `.pem` for that key par, which should be saved in your `~/keys` directory. Replace the value of the security group ID (`sg-xxxxxx`) with the ID of the security group described above.
+Now you should edit the [example application blueprint](./examples/example.yaml) so that it works with your own AWS account. Set the values of `identity` and `credential` with your access key ID and secret key and update the `keyPair` name with a key pair that is available on your AWS account and set the `loginUser.privateKeyFile` and `privateKeyFile` values to point to the `.pem` for that key par, which should be saved in your `~/keys` directory. Replace the value of the security group ID (`sg-xxxxxx`) with the ID of the security group described above.
 
 When you are finished making these edits, you can deploy the Sawtooth platform using the following Docker command:
 
@@ -44,25 +32,17 @@ When you are finished making these edits, you can deploy the Sawtooth platform u
     Name:     | example-sawtooth-platform
     status:   | In progress
 
-Once the Sawtooth network has been deployed, check its status using the Brooklyn console UI, which will provide links to the main Grafana dashboard for metrics or the Sawtooth Explorer to look up raw blockchain data. For more information, see the [Platform Components](./docs/components.md) documentation.
-
-![Brooklyn Console with Sawtooth](./docs/images/apache-brooklyn.png)
-
-To retrieve some details about the running platform, use the following command:
+Once the Brooklyn console on [localhost:8081](http://localhost:8081) shows the platform has started, you can retrieve details about platform configuration and links using the following command:
 
     $ docker exec brooklyn status.sh example-sawtooth-platform
     {
       "host.address": "172.31.30.8",
       "seth.account": "9a998829441e9f114cc4168c371b24220e844074",
       "administrator.id": "0326a02883aa1394a446455ef3d905adaec01f7b33837c4618180a09a13318c417"
-    }
-
-## Contributing
-
-Since Hyperledger Sawtooth is an ever-changing and ever-expanding project, contributions to this repository are welcomed and encouraged in the form of:
-
-* Testing deployments on different clouds and creating issues with feedback
-* Adding additional Sawtooth components to the blueprint as part of the platform
+      "links": {
+          "grafana.uri": "http://172.31.30.8:3000",
+          "rest-api.uri": "http://172.31.30.8:8080",
+    ...
 
 ---
 Copyright 2018 Blockchain Technology Partners Limited; Licensed under the [Apache License, Version 2.0](./LICENSE).
