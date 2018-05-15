@@ -9,7 +9,7 @@ This document will provide an overview of all the components that comprise the S
 
 [Apache Brooklyn](https://brooklyn.apache.org/) is a cloud orchestration and management service, used to start and manage the whole Sawtooth platform.
 
-![Apache brooklyn UI](./images/apache-brooklyn.png)
+![Apache Brooklyn](./images/apache-brooklyn.png) ![Apache Brooklyn Create Application](./images/apache-brooklyn-create-application.png)
 
 ### Sawtooth Core
 
@@ -39,11 +39,12 @@ This is the heart of the platform which consists of the following components:
 
 To log into the RBAC UI, make note of the Brooklyn sensor value for `sawtooth.next-directory.administrator.id`. Then go to the URL provided by sensor `sawtooth.next-directory-ui.uri` and log in with the user ID and a default password of `password`.
 
-![Sawtooth Next Directory UI](./images/next-directory-all-users.png)
+![Sawtooth Next Directory Login](./images/next-directory-login.png) ![Sawtooth Next Directory Create User](./images/next-directory-create-user.png)
+![Sawtooth Next Directory All Users](./images/next-directory-all-users.png) ![Sawtooth Next Directory Groups](./images/next-directory-groups.png)
 
 From the RBAC UI users, groups, and tasks can be managed.
 
-![Next Directory RethinkDB](./images/rethinkdb-dashboard.png)
+![RethinkDB Dashboard](./images/rethinkdb-dashboard.png) ![RethinkDB Tables](./images/rethinkdb-tables.png)
 
 ### Sawtooth Explorer
 
@@ -51,7 +52,7 @@ From the RBAC UI users, groups, and tasks can be managed.
 
 Go to the URL provided by the sensor `sawtooth.explorer.uri`.
 
-![Sawtooth Explorer UI](./images/explorer-batches.png)
+![Sawtooth Explorer Batches](./images/explorer-batches.png) ![Sawtooth Explorer Transactions](./images/explorer-transactions.png)
 
 ### Grafana
 
@@ -59,7 +60,7 @@ Go to the URL provided by the sensor `sawtooth.explorer.uri`.
 
 Go to the URL provided by the sensor `sawtooth.grafana.uri` and log in using the username and password pair `admin` / `admin`.
 
-![Grafana UI](./images/grafana-sawtooth.png)
+![Grafana Sawtooth](./images/grafana-sawtooth.png) ![Grafana Host](./images/grafana-host.png)
 
 ### Docker
 

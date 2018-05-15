@@ -25,21 +25,27 @@ Your security group must be configured to allow access to ports _22_, _3000_, _3
 
 Follow [this guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#adding-security-group-rule) to create these rules:
 
-Inbound:
-- Type: All TCP | Source: Custom "sg-[your SG ID here]"
-- Type: All UDP | Source: Custom "sg-[your SG ID here]"
-- Type: SSH | Source: Custom "My IP" (port 22 is automatically selected)
-- Type: Custom TCP Rule | Port Range: 3000 | Source: Custom "My IP"
-- Type: Custom TCP Rule | Port Range: 3030 | Source: Custom "My IP"
-- Type: Custom TCP Rule | Port Range: 4200 | Source: Custom "My IP"
-- Type: Custom TCP Rule | Port Range: 4201 | Source: Custom "My IP"
-- Type: Custom TCP Rule | Port Range: 8000 | Source: Custom "My IP"
-- Type: Custom TCP Rule | Port Range: 8080 | Source: Custom "My IP"
-- Type: Custom TCP Rule | Port Range: 8090 | Source: Custom "My IP"
-- Type: Custom TCP Rule | Port Range: 9090 | Source: Custom "My IP"
+**Inbound**
 
-Outbound:
-- Type: All TCP | Source: Custom "sg-[your SG ID here]"
+| Type | Range | Source |
+|------|-------|--------|
+| All TCP | | `sg-[your SG ID here]` |
+| All UDP | | `sg-[your SG ID here]` |
+| SSH | 22 | My IP |
+| Custom TCP | 3000 | My IP |
+| Custom TCP | 3030 | My IP |
+| Custom TCP | 4200 | My IP |
+| Custom TCP | 4201 | My IP |
+| Custom TCP | 8000 | My IP |
+| Custom TCP | 8080 | My IP |
+| Custom TCP | 8090 | My IP |
+| Custom TCP | 9090 | My IP |
+
+**Outbound**
+
+| Type | Source |
+|------|--------|
+| All TCP | `sg-[your SG ID here]` |
 
 
 ---

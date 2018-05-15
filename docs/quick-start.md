@@ -19,11 +19,11 @@ Navigate to the root directory of this repository and run the following command 
     [.] waiting for brooklyn api..................ok
     ...
 
-Note the `/keys` and `/blueprints` volumes being mounted from directories on the host. The files, particularly the SSH keys, must be readable by the `brooklyn` user in the container. See the [`launch.sh`](scripts/launch.sh) script for a more detailed example.
+Note the `/keys` and `/blueprints` volumes being mounted from directories on the host. The files, particularly the SSH keys, must be readable by the `brooklyn` user in the container. See the [`launch.sh`](../scripts/launch.sh) script for a more detailed example.
 
 Once the Brooklyn server has started up, the console UI will be accessible at [`http://localhost:8081/`](http://localhost:8081/) and you can also use the `br` command-line tool either on the Docker container or remotely after logging in.
 
-Now you should edit the [example application blueprint](./examples/example.yaml) so that it works with your own AWS account. Set the values of `identity` and `credential` with your access key ID and secret key and update the `keyPair` name with a key pair that is available on your AWS account and set the `loginUser.privateKeyFile` and `privateKeyFile` values to point to the `.pem` for that key par, which should be saved in your `~/keys` directory. Replace the value of the security group ID (`sg-xxxxxx`) with the ID of the security group described above.
+Now you should edit the [example application blueprint](../examples/example.yaml) so that it works with your own AWS account. Set the values of `identity` and `credential` with your access key ID and secret key and update the `keyPair` name with a key pair that is available on your AWS account and set the `loginUser.privateKeyFile` and `privateKeyFile` values to point to the `.pem` for that key par, which should be saved in your `~/keys` directory. Replace the value of the security group ID (`sg-xxxxxx`) with the ID of the security group described above.
 
 When you are finished making these edits, you can deploy the Sawtooth platform using the following Docker command:
 
@@ -32,7 +32,7 @@ When you are finished making these edits, you can deploy the Sawtooth platform u
     Name:     | example-sawtooth-platform
     status:   | In progress
 
-Once the Brooklyn console on [localhost:8081](http://localhost:8081) shows the platform has started, you can retrieve details about platform configuration and links using the following command:
+Once the Brooklyn console shows the platform has started, you can retrieve details about service configuration and links using the following command:
 
     $ docker exec brooklyn status.sh example-sawtooth-platform
     {

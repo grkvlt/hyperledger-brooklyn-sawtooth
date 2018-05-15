@@ -22,7 +22,7 @@ location:
 
 ### Setup GCE firewall rules
 
-It is recommended that you setup a VPC with default subnets for any region that you wish to deploy the hyperledger-broolkyn-sawtooth blueprint to.
+It is recommended that you setup a VPC with default subnets for any region that you wish to deploy the Sawtooth blueprints to.
 
 Follow [this guide](https://cloud.google.com/appengine/docs/standard/python/creating-firewalls) to setup 2 default firewall rules for the target region(s).  The first rule should allow all traffice within the target subnet and the second should allow the following inbound access from your IP (or 0.0.0.0/0 for all access): 22, 3000, 3030, 4200, 4201, 8000, 8080, 8090, 9090.
 

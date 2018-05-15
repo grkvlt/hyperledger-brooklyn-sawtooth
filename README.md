@@ -3,7 +3,7 @@ Hyperledger Brooklyn Sawtooth
 
 This repository contains [Apache Brooklyn](https://brooklyn.apache.org/) blueprints for a [Hyperledger Sawtooth](https://www.hyperledger.org/projects/sawtooth) blockchain platform using [Docker](https://www.docker.com/).
 
-Please note that this is an early access release of the Brooklyn sawtooth platform and is intended for development use and testing rather than for production deployments. However, we are adding more features and configuration options to the platform that will be useful for building production ready applications.
+Please note that this is an early access release of the Brooklyn Sawtooth platform and is intended for development use and testing rather than for production deployments. However, we are adding more features and configuration options to the platform that will be useful for building production ready applications.
 
 ## Purpose
 
@@ -24,6 +24,8 @@ In-depth descriptions and diagrams of all these components can be found in the l
 ## Getting Started
 
 The [getting started guide](./docs/getting-started.md) shows you the simplest way to deploy your own instance of the platform.
+
+![Sawtooth Platform](./docs/images/my-sawtooth-platform.png) ![Sawtooth Platform Server Node](./docs/images/my-sawtooth-platform-server-node.png)
 
 If you are already running a Brooklyn server and want to use a downloaded release of this repository (rather than running Brooklyn in a Docker container with the release baked in), skip "Start the Brooklyn Server Container" in the getting started guide and instead follow [this guide](./docs/advanced-installation.md). Afterwards, return back and continue with the getting started guide.
 

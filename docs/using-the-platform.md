@@ -11,10 +11,11 @@ The Apache Brooklyn deployed Hyperledger Sawtooth provides this functionality vi
 
 To call the effector you will need to provide the ID of the admin account. You can get this from the `sawtooth.seth.account` sensor on `sawtooth-platform-server-node`. Executing the `status.sh` script on the `brooklyn` container will also provide this information.
 
-    $ docker exec brooklyn setatus.sh example-sawtooth-platform
+    $ docker exec brooklyn status.sh example-sawtooth-platform
     {
-      "seth.account": ""
-    }
+      "host.address": "172.31.30.8",
+      "seth.account": "9a998829441e9f114cc4168c371b24220e844074",
+    ...
 
 Once you have noted this value, open the effectors tab and click invoke on `deploy-smart-contract`.
 

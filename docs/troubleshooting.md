@@ -29,7 +29,8 @@ docs for information.
 Issues with provisioning (starting and setting up a VM on the target cloud) will happen fairly
 quickly after the attempted deployment and will cause all entities to fail.  The summary view
 for each entity will show the error returned from the target cloud's API.  Start by checking
-that your location has the correct identity, credential, keypair, and privateKeyFile.  You
+that your location has the correct identity and credential for your EC2 account, and that the
+key-pair name and private key files are configured correctly and accessible from Docker.  You
 could also check that the target security group allows ssh access from the location where you
 are running Apache Brooklyn.
 
@@ -41,7 +42,7 @@ for more details.
 If provisioning succeeds but deployment still fails then this is likely to be a problem with
 installing and running a specific entity.
 
-In the application view click on the failed enity and then click on the activities tab.  You can
+In the application view click on the failed entity and then click on the activities tab.  You can
 now see the activity that failed (usually start).  Drill down into this by clicking on it and drill
 down further into each failed step until you reach the step that actually failed.  You should see the
 stdin, stdout, stderr, and environment that was run in that step.  Opening each of these will give you

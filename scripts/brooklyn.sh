@@ -33,7 +33,7 @@ CATALOG_DIR="${CATALOG_DIR:-/catalog}"
 add() {
   file=$1
   if [ -f ${file} ] ; then
-    if br add-catalog ${file} > /dev/null 2>&1 ; then
+    if br catalog add ${file} > /dev/null 2>&1 ; then
       echo "[+] added $(basename ${file}) to catalog"
     else
       echo "[!] failed adding $(basename ${file})"
