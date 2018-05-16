@@ -20,6 +20,14 @@ location:
       network: <VPC url setup as discussed below>
 ```
 
+### Use GCE Specific Hardware
+
+Set the hardware configuration for the server and validator nodes to one of the GCE types, like this:
+
+    brooklyn.config:
+      sawtooth.validator-node.hardware: "n1-standard-2"
+      sawtooth.server-node.hardware: "n1-standard-8"
+
 ### Setup GCE firewall rules
 
 It is recommended that you setup a VPC with default subnets for any region that you wish to deploy the Sawtooth blueprints to.

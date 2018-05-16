@@ -29,3 +29,5 @@ services:
       sawtooth.network.cidr: "10.0.0.0/22"
       sawtooth.network.gw: "10.0.0.1"
       sawtooth.cluster.name: "example"
+      sawtooth.server-node.hardware: "m4.2xlarge"
+      sawtooth.validator-node.hardware: "m4.large"

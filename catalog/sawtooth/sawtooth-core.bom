@@ -283,6 +283,12 @@ brooklyn.catalog:
         type: sawtooth-docker-engine
         name: "sawtooth-server-node"
 
+        brooklyn.parameters:
+          - name: sawtooth.server-node.hardware
+            description: "Sawtooth Server Node Hardware"
+            type: string
+            default: "m3.xlarge"
+
         brooklyn.config:
           sawtooth.node: "validator"
           sawtooth.network.enable: true
@@ -291,6 +297,8 @@ brooklyn.catalog:
             SUBNET: $brooklyn:config("sawtooth.network.cidr")
             GATEWAY: $brooklyn:config("sawtooth.network.gw")
             NETWORK_ENABLE: $brooklyn:config("sawtooth.network.enable")
+          provisioning.properties.hardwareId:
+            $brooklyn:config("sawtooth.server-node.hardware")
           post.launch.command: |
             if ${NETWORK_ENABLE} ; then DRIVER=overlay ; else DRIVER=bridge ; fi
 
@@ -457,7 +465,15 @@ brooklyn.catalog:
         type: sawtooth-docker-engine
         name: "sawtooth-validator-node"
 
+        brooklyn.parameters:
+          - name: sawtooth.validator-node.hardware
+            description: "Sawtooth Server Node Hardware"
+            type: string
+            default: "m3.medium"
+
         brooklyn.config:
+          provisioning.properties.hardwareId:
+            $brooklyn:config("sawtooth.validator-node.hardware")
           sawtooth.node:
             $brooklyn:formatString:
               - "%s-%03x"
