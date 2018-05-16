@@ -32,7 +32,7 @@
 BUILD_DIR="${BUILD_DIR:-./build}"
 
 SAWTOOTH_CORE_REPO="${SAWTOOTH_CORE_REPO:-https://github.com/blockchaintp/sawtooth-core.git}"
-SAWTOOTH_CORE_BRANCH="${SAWTOOTH_CORE_BRANCH:-1-0}"
+SAWTOOTH_CORE_BRANCH="${SAWTOOTH_CORE_BRANCH:-1-0-staging-01}"
 SAWTOOTH_SETH_REPO="${SAWTOOTH_SETH_REPO:-https://github.com/blockchaintp/sawtooth-seth.git}"
 SAWTOOTH_SETH_BRANCH="${SAWTOOTH_SETH_BRANCH:-seth-rpc-eth-call}"
 SAWTOOTH_NEXT_DIRECTORY_REPO="${SAWTOOTH_NEXT_DIRECTORY_REPO:-https://github.com/blockchaintp/sawtooth-next-directory.git}"
