@@ -74,7 +74,7 @@ brooklyn.catalog:
             description: "Network Debug"
             type: boolean
             default: false
-          - name: full.cluster
+          - name: network.enable
             description: "Engine for a standalone sever (false) or full cluster (true)"
             type: boolean
             default: true
@@ -92,7 +92,7 @@ brooklyn.catalog:
                 - $brooklyn:attributeWhenReady("host.subnet.address")
                 - $brooklyn:config("docker.port")
             DEBUG: $brooklyn:config("network.debug")
-            FULL_CLUSTER: $brooklyn:config("full.cluster")
+            NETWORK_ENABLE: $brooklyn:config("network.enable")
 
           install.command: |
             sudo apt-get update -y
@@ -115,7 +115,7 @@ brooklyn.catalog:
               /lib/systemd/system/docker.service
             GROUP=$(groups | cut -d\  -f1)
 
-            if ${FULL_CLUSTER} ; then
+            if ${NETWORK_ENABLE} ; then
               sudo tee /etc/docker/daemon.json <<EOF1
               {
                 "debug": true,
@@ -160,10 +160,13 @@ brooklyn.catalog:
 
           checkRunning.command: |
             sudo systemctl status --no-pager docker.service
+            if ${NETWORK_ENABLE} ; then
+                docker network ls > /dev/null
+            fi
 
           provisioning.properties:
             required.ports:
-              [ 22, 4243, 7050, 7051, 7052, 7053, 7054, 7055, 7056, 7057, 7058, 7059, 8080, 8888, 9999 ]
+              [ 22, 2376, 4243, 7050, 7051, 7052, 7053, 7054, 7055, 7056, 7057, 7058, 7059, ]
 
           childStartMode: foreground_late
 

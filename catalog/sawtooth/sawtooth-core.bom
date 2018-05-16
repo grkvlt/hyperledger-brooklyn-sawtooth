@@ -43,7 +43,7 @@ brooklyn.catalog:
             name: "sawtooth-server-node"
             id: sawtooth-server-node
             brooklyn.config:
-              sawtooth.network.enable: false
+              network.enable: false
 
         brooklyn.enrichers:
           - type: org.apache.brooklyn.enricher.stock.Propagator
@@ -89,7 +89,7 @@ brooklyn.catalog:
             name: "sawtooth-seth-server-node"
             id: sawtooth-seth-server-node
             brooklyn.config:
-              sawtooth.network.enable: false
+              network.enable: false
 
         brooklyn.enrichers:
           - type: org.apache.brooklyn.enricher.stock.Propagator
@@ -291,24 +291,25 @@ brooklyn.catalog:
 
         brooklyn.config:
           sawtooth.node: "validator"
-          sawtooth.network.enable: true
+          network.enable: true
           shell.env:
             NETWORK: $brooklyn:config("sawtooth.network")
             SUBNET: $brooklyn:config("sawtooth.network.cidr")
             GATEWAY: $brooklyn:config("sawtooth.network.gw")
-            NETWORK_ENABLE: $brooklyn:config("sawtooth.network.enable")
+            NETWORK_ENABLE: $brooklyn:config("network.enable")
           provisioning.properties.hardwareId:
             $brooklyn:config("sawtooth.server-node.hardware")
           post.launch.command: |
             if ${NETWORK_ENABLE} ; then DRIVER=overlay ; else DRIVER=bridge ; fi
 
             echo "[SAW] Setup ${NETWORK} ${DRIVER} network (${SUBNET})"
-            docker network ls | grep "${DRIVER}.*${NETWORK}" ||
+            while ! docker network inspect ${NETWORK} > /dev/null ; do
               docker network create \
                   --driver=${DRIVER} \
                   --subnet="${SUBNET}" \
                   --gateway="${GATEWAY}" \
-                  "${NETWORK}"
+                  "${NETWORK}" || sleep 5
+            done
 
         brooklyn.children:
           - type: conditional-entity
@@ -316,7 +317,7 @@ brooklyn.catalog:
             id: openvpn-server
             brooklyn.config:
               start.timeout: "forever"
-              conditional.entity.create: $brooklyn:config("sawtooth.network.enable")
+              conditional.entity.create: $brooklyn:config("network.enable")
               conditional.entity.spec:
                 $brooklyn:entitySpec:
                   type: openvpn-server
