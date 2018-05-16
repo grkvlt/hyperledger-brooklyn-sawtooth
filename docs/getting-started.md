@@ -15,12 +15,11 @@ Follow [this guide](https://docs.docker.com/install/) to install Docker on your 
 
 ### Start the Brooklyn Server Container
 
-Navigate to the root directory of this repository and run the following command to start a Brooklyn server using a Docker image with the Sawtooth platform entities loaded into the catalog:
+Run the following command to start a Brooklyn server using a Docker image with the Sawtooth platform entities loaded into the catalog:
 
     $ docker run -d \
             -p 8081:8081 \
             -v ~/keys:/keys \
-            -v $(pwd)/examples:/blueprints \
             --name brooklyn \
             blockchaintp/brooklyn-sawtooth
 
@@ -28,7 +27,7 @@ The output should be the ID of the newly created container (different every time
 
 	ae82e15583ac4f32724a2daf0f122d3b6c7075ec3fcc35e35f46f6e300c522a9
 
-Note the `/keys` and `/blueprints` volumes being mounted from the Docker host (your local machine). The files, particularly the SSH keys, must be readable by the `brooklyn` user in the container. See the [`launch.sh`](../scripts/launch.sh) script for a more detailed example.
+Note the `/keys` volume being mounted from the Docker host (your local machine). The SSH key files there must be readable by the `brooklyn` user in the container. See the [`launch.sh`](../scripts/launch.sh) script for a more detailed example.
 
 Then run the following command to view the Brooklyn logs:
 

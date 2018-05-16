@@ -5,7 +5,7 @@ This guide is intended for users who are familiar with Docker and Brooklyn and w
 
 The only software pre-requisite is a recent version of Docker installed, and you must have credentials and SSH keys available to access the AWS EC2 cloud. You must also have an AWS security group configured which allows access to ports _22_, _3000_, _3030_, _4200_, _4201_, _8000_, _8080_, _8090_ and _9090_ and allows machines in the same group to communicate on all TCP and UDP ports.
 
-Navigate to the root directory of this repository and run the following command to start a Brooklyn server using a Docker image with the Sawtooth platform entities loaded into the catalog:
+The following command starts a Brooklyn server using a Docker image with the Sawtooth platform entities loaded into the catalog. See the [`launch.sh`](../scripts/launch.sh) script for a more detailed example.
 
     $ docker run -d \
             -p 8081:8081 \
@@ -19,7 +19,7 @@ Navigate to the root directory of this repository and run the following command 
     [.] waiting for brooklyn api..................ok
     ...
 
-Note the `/keys` and `/blueprints` volumes being mounted from directories on the host. The files, particularly the SSH keys, must be readable by the `brooklyn` user in the container. See the [`launch.sh`](../scripts/launch.sh) script for a more detailed example.
+Note the `/keys` and `/blueprints` volumes being mounted from directories on the host. These files, particularly the SSH keys, must be readable by the `brooklyn` user in the container.  If you are using the sample blueprints from this repository, make sure you run the command from its root directory, otherwise change the volume mount for `/blueprints` to point at the location where you have stored the required YAML files.
 
 Once the Brooklyn server has started up, the console UI will be accessible at [`http://localhost:8081/`](http://localhost:8081/) and you can also use the `br` command-line tool either on the Docker container or remotely after logging in.
 
