@@ -27,7 +27,7 @@ The [getting started guide](./docs/getting-started.md) shows you the simplest wa
 
 ![Sawtooth Platform](./docs/images/my-sawtooth-platform.png) ![Sawtooth Platform Server Node](./docs/images/my-sawtooth-platform-server-node.png)
 
-If you are already running a Brooklyn server and want to use a downloaded release of this repository (rather than running Brooklyn in a Docker container with the release baked in), skip "Start the Brooklyn Server Container" in the getting started guide and instead follow [this guide](./docs/advanced-installation.md). Afterwards, return back and continue with the getting started guide.
+If you are already running a Brooklyn server and want to use a downloaded release of this repository (rather than running Brooklyn in a Docker container with the release baked in), skip "Start the Brooklyn Server Container" in the getting started guide and instead follow [this guide](./docs/advanced-installation.md). Afterwards, return back and continue with the getting started guide. If you are already familiar with Brooklyn and Amazon EC2 then the [quick start quide](./docs/quick-start.md) may be more suitable.
 
 If you want to build a private version of the Sawtooth platform, follow [this guide](./docs/diy-build.md) before proceeding with the getting started guide.
 

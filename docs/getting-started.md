@@ -1,7 +1,7 @@
 Getting Started
 ===============
 
-This guide will cover deploying Hyperledger Sawtooth to AWS using an Apache Brooklyn server running in a Docker container on your local machine. This blueprint can deploy Sawtooth to other clouds, and Apache Brooklyn can be run and configured differently, but that is beyond the scope of this document.
+This guide will cover deploying Hyperledger Sawtooth to AWS using an Apache Brooklyn server running in a Docker container on your local machine. This blueprint can deploy Sawtooth to other clouds, and Apache Brooklyn can be run and configured differently, which is beyond the scope of this document and is covered in the [advanced installation guide](./advanced-installation.md) instead. Advanced users can also look at the [quick start guide](./quick-start.md) which assumes a greater level of familiarity with Brooklyn and Amazon EC2 and that credentials and keys are already configured and available.
 
 ### Set Up Your AWS Account
 
