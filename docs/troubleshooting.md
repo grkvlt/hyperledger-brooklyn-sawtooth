@@ -37,6 +37,16 @@ are running Apache Brooklyn.
 See [here](https://brooklyn.apache.org/v/latest/ops/troubleshooting/deployment.html#vm-provisioning-failures)
 for more details.
 
+**SSH Entropy**
+
+If you are running Docker on a cloud VM, the container running Brooklyn may not have enough
+entropy. This will show up as SSH connections to the deployed nodes during entity startup
+seeming to hang and take a very long (many minutes) time to handshake and connect. A simple
+fix for this is to link the `/dev/random` device on the Brooklyn container to the Docker host.
+Add the following option to the command you use to start the Brooklyn service:
+
+    -v /dev/urandom:/dev/random
+
 ## Issues with Installation / Launch
 
 If provisioning succeeds but deployment still fails then this is likely to be a problem with
