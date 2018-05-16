@@ -23,24 +23,28 @@
 # Make a release of Hyperledger Brooklyn Sawtooth
 #
 # Usage: release.sh old-version new-version
+# Environment:
+#     VERSION - String indicating version to be changed
+#     BRANCH - Set to true to make a release branch
 ##
 
 # set versions
 OLD_VERSION=$1
 NEW_VERSION=$2
 VERSION="HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION"
+BRANCH="${BRANCH:-false}"
 
 if [ -z "${OLD_VERSION}" -o -z "${NEW_VERSION}" -o "${OLD_VERSION}" == "${NEW_VERSION}" ] ; then
     echo "Usage: $(basename $0) old-version new-version"
     exit 1
 fi
-if grep "release/${NEW_VERSION}" <(git branch -l) > /dev/null 2>&1 ; then
+${BRANCH} && if grep "release/${NEW_VERSION}" <(git branch -l) > /dev/null 2>&1 ; then
     echo "Error: Version ${NEW_VERSION} already exists"
     exit 1
 fi
 
 # create release branch
-git checkout -b release/${NEW_VERSION}
+${BRANCH} && git checkout -b release/${NEW_VERSION}
 
 # find all files with version variable
 find . \
@@ -61,20 +65,22 @@ while [ "${continue}" == "y" ] ; do
         xargs grep "${OLD_VERSION}" |
         cut -d: -f1 |
         uniq)
+    continue="n"
     if [ $(echo ${extra} | wc -w) -gt 0 ] ; then
         grep "${OLD_VERSION}" ${extra}
-        read -p "Edit? (y/n) " -i y -e edit
-        if grep -i "y" <<<"${edit}" > /dev/null 2>&1 ; then
-            ${VISUAL:-vi} ${extra}
-        else
-            continue="n"
+        if ${BRANCH} ; then
+            read -p "Edit? (y/n) " -i y -e edit
+            if grep -i "y" <<<"${edit}" > /dev/null 2>&1 ; then
+                ${VISUAL:-vi} ${extra}
+                continue="y"
+            fi
         fi
-    else
-        continue="n"
     fi
 done
 
 # commit changes to release branch
-git commit --all -s -m "Version ${NEW_VERSION}"
-git tag -a -m "Version ${NEW_VERSION}" v${NEW_VERSION}
-git push --follow-tags origin release/${NEW_VERSION}
+if ${BRANCH} ; then
+    git commit --all -s -m "Version ${NEW_VERSION}"
+    git tag -a -m "Version ${NEW_VERSION}" v${NEW_VERSION}
+    git push --follow-tags origin release/${NEW_VERSION}
+fi
