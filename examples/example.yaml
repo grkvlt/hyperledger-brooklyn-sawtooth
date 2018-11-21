@@ -17,13 +17,11 @@ location:
       - "sg-xxxxxx"
 
 services:
-  - type: sawtooth-platform-application
+  - type: sawtooth-seth-cluster-application
     id: example-sawtooth-platform
     name: "example-sawtooth-platform"
 
     brooklyn.config:
-      sawtooth.version: "1.0.5"
-      sawtooth.repository: "blockchaintp"
       sawtooth.size: 2
       sawtooth.network: "example"
       sawtooth.network.cidr: "10.0.0.0/22"

@@ -7,24 +7,13 @@ brooklyn.catalog:
       item:
         type: jclouds:aws-ec2
         brooklyn.config:
-          identity: XXXXXXXXXXXXXXXXXXXX
-          credential: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          identity: AKIAI3NCEOECW2MLZQ6A
+          credential: 1IxZRPVs+DEWyoeyWtKwUCMzRX0Gy4PeG8hAIQE1
           stopIptables: true
           installDevUrandom: true
-          keyPair: xxxxxx
-          loginUser.privateKeyFile: /keys/xxxxxx.pem
-          privateKeyFile: /keys/xxxxxx.pem
-
-    - id: amazon-frankfurt
-      name: "amazon-frankfurt"
-      itemType: location
-      item:
-        type: amazon-europe
-        brooklyn.config:
-          displayName: "amazon-frankfurt"
-          region: eu-central-1
-          securityGroups:
-            - "sg-xxxxxx"
+          keyPair: adk
+          loginUser.privateKeyFile: ~/.ssh/adk.pem
+          privateKeyFile: ~/.ssh/adk.pem
 
     - id: amazon-dublin
       name: "amazon-dublin"
@@ -35,26 +24,4 @@ brooklyn.catalog:
           displayName: "amazon-dublin"
           region: eu-west-1
           securityGroups:
-            - "sg-xxxxxx"
-
-    - id: amazon-london
-      name: "amazon-london"
-      itemType: location
-      item:
-        type: amazon-europe
-        brooklyn.config:
-          displayName: "amazon-london"
-          region: eu-west-2
-          securityGroups:
-            - "sg-xxxxxx"
-
-    - id: amazon-paris
-      name: "amazon-paris"
-      itemType: location
-      item:
-        type: amazon-europe
-        brooklyn.config:
-          displayName: "amazon-paris"
-          region: eu-west-3
-          securityGroups:
-            - "sg-xxxxxx"
+            - "sg-02c41b7f"
