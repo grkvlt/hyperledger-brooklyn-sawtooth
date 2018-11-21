@@ -1,9 +1,7 @@
 brooklyn.catalog:
-  version: "0.6.0-SNAPSHOT" # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
+  version: "0.7.0-SNAPSHOT" # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
 
   items:
     - "classpath://io.brooklyn.etcd.brooklyn-etcd:etcd/etcd.bom"
     - "classpath://io.brooklyn.hyperledger.sawtooth:sawtooth/common.bom"
-    - "classpath://io.brooklyn.hyperledger.sawtooth:sawtooth/openvpn.bom"
-    - "classpath://io.brooklyn.hyperledger.sawtooth:sawtooth/sawtooth-core.bom"
-    - "classpath://io.brooklyn.hyperledger.sawtooth:sawtooth/sawtooth-extras.bom"
+    - "classpath://io.brooklyn.hyperledger.sawtooth:sawtooth/sawtooth.bom"

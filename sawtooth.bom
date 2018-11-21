@@ -1,5 +1,5 @@
 brooklyn.catalog:
-  version: "0.6.0-SNAPSHOT" # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
+  version: "0.7.0-SNAPSHOT" # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
   publish:
     description: |
       Entities and Applications for Hyperledger Sawtooth.
@@ -8,9 +8,9 @@ brooklyn.catalog:
 
   brooklyn.libraries:
     - "https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&g=io.brooklyn.etcd&a=brooklyn-etcd&v=2.7.0-SNAPSHOT"
-    - url: "mvn:io.brooklyn.hyperledger/sawtooth/0.6.0-SNAPSHOT" # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
+    - url: "mvn:io.brooklyn.hyperledger/sawtooth/0.7.0-SNAPSHOT" # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
       name: io.brooklyn.hyperledger.sawtooth
-      version: 0.6.0-SNAPSHOT # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
+      version: 0.7.0-SNAPSHOT # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
 
   items:
     - "classpath://io.brooklyn.hyperledger.sawtooth:sawtooth/catalog.bom"
@@ -29,36 +29,13 @@ brooklyn.catalog:
             name: "sawtooth-cluster-application"
 
             brooklyn.config:
-              sawtooth.version: "1.0.5"
-              sawtooth.repository: "sawtooth"
+              sawtooth.version: "1.0"
+              sawtooth.repository: "hyperledger"
               sawtooth.size: 4
               sawtooth.network: "sawtooth"
               sawtooth.network.cidr: "10.0.0.0/24"
               sawtooth.network.gw: "10.0.0.1"
               sawtooth.cluster.name: "brooklyn"
-
-    - id: sawtooth-remote-cluster-template
-      name: "sawtooth-remote-cluster"
-      description: |
-        Hyperledger Sawtooth Blockchain Remote Cluster.
-      iconUrl: "classpath://io.brooklyn.hyperledger.sawtooth:icon/hyperledger.png"
-      itemType: template
-      publish:
-        license_code: APACHE-2.0
-      item:
-        services:
-          - type: sawtooth-remote-cluster-application
-            name: "sawtooth-remote-cluster-application"
-
-            brooklyn.config:
-              sawtooth.version: "1.0.5"
-              sawtooth.repository: "sawtooth"
-              sawtooth.size: 3
-              sawtooth.network: "remote"
-              sawtooth.network.cidr: "10.1.1.0/24"
-              sawtooth.network.gw: "10.1.1.1"
-              sawtooth.cluster.name: "brooklyn"
-              sawtooth.seed.network: "sawtooth"
 
     - id: sawtooth-seth-cluster-template
       name: "sawtooth-seth-cluster"
@@ -72,50 +49,13 @@ brooklyn.catalog:
             name: "sawtooth-seth-cluster-application"
 
             brooklyn.config:
-              sawtooth.version: "1.0.5"
-              sawtooth.repository: "sawtooth"
+              sawtooth.version: "1.0"
+              sawtooth.repository: "hyperledger"
+              seth.version: "0.2.3"
+              seth.repository: "hyperledger"
               sawtooth.size: 3
               sawtooth.network: "remote"
               sawtooth.network.cidr: "10.1.1.0/24"
               sawtooth.network.gw: "10.1.1.1"
               sawtooth.cluster.name: "brooklyn"
               sawtooth.seed.network: "sawtooth"
-
-    - id: sawtooth-platform-template
-      name: "sawtooth-platform"
-      description: |
-        Hyperledger Sawtooth platform cluster.
-      iconUrl: "classpath://io.brooklyn.hyperledger.sawtooth:icon/hyperledger.png"
-      itemType: template
-      item:
-        services:
-          - type: sawtooth-platform-application
-            name: "sawtooth-platform-application"
-
-            brooklyn.config:
-              sawtooth.version: "1.0.5"
-              sawtooth.repository: "sawtooth"
-              sawtooth.size: 3
-              sawtooth.network: "remote"
-              sawtooth.network.cidr: "10.1.1.0/24"
-              sawtooth.network.gw: "10.1.1.1"
-              sawtooth.cluster.name: "brooklyn"
-              sawtooth.seed.network: "sawtooth"
-
-    - id: sawtooth-workload-template
-      name: "sawtooth-workload"
-      description: |
-        Hyperledger Sawtooth Workload Generator.
-      iconUrl: "classpath://io.brooklyn.hyperledger.sawtooth:icon/hyperledger.png"
-      itemType: template
-      publish:
-        license_code: APACHE-2.0
-      item:
-        services:
-          - type: sawtooth-workload-application
-            name: "sawtooth-workload-application"
-
-            brooklyn.config:
-              sawtooth.version: "1.0.5"
-              sawtooth.repository: "sawtooth"
-              sawtooth.network: "sawtooth"

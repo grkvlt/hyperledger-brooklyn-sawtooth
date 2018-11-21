@@ -1,5 +1,5 @@
 brooklyn.catalog:
-  version: "0.6.0-SNAPSHOT" # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
+  version: "0.7.0-SNAPSHOT" # HYPERLEDGER_BROOKLYN_SAWTOOTH_VERSION
   publish:
     description: |
       Entities for Hyperledger Sawtooth.
@@ -7,98 +7,6 @@ brooklyn.catalog:
     icon_url: "classpath://io.brooklyn.hyperledger.sawtooth:icon/sawtooth.png"
 
   items:
-    - id: sawtooth-standalone-server-application
-      description: |
-        Hyperledger Sawtooth standalone server application.
-      itemType: entity
-      iconUrl: "classpath://io.brooklyn.hyperledger.sawtooth:icon/hyperledger.png"
-      item:
-        type: org.apache.brooklyn.entity.stock.BasicApplication
-        name: "sawtooth-standalone-server-application"
-
-        brooklyn.parameters:
-          - name: sawtooth.version
-            description: "Sawtooth Version"
-            type: string
-            default: "latest"
-          - name: sawtooth.repository
-            description: "Sawtooth Repository"
-            type: string
-            default: "sawtooth"
-          - name: sawtooth.network
-            description: "Network Name"
-            type: string
-            default: "sawtooth"
-          - name: sawtooth.network.cidr
-            description: "Network CIDR"
-            type: string
-            default: "10.0.0.0/24"
-          - name: sawtooth.network.gw
-            description: "Network Gateway"
-            type: string
-            default: "10.0.0.1"
-
-        brooklyn.children:
-          - type: sawtooth-server-node
-            name: "sawtooth-server-node"
-            id: sawtooth-server-node
-            brooklyn.config:
-              network.enable: false
-
-        brooklyn.enrichers:
-          - type: org.apache.brooklyn.enricher.stock.Propagator
-            brooklyn.config:
-              uniqueTag: rest-api-main-uri-propagator
-              producer: $brooklyn:component("sawtooth-server-node")
-              sensorMapping:
-                $brooklyn:sensor("sawtooth.rest-api.uri"): $brooklyn:sensor("main.uri")
-
-    - id: sawtooth-seth-standalone-server-application
-      description: |
-        Hyperledger Sawtooth Seth standalone server application.
-      itemType: entity
-      iconUrl: "classpath://io.brooklyn.hyperledger.sawtooth:icon/hyperledger.png"
-      item:
-        type: org.apache.brooklyn.entity.stock.BasicApplication
-        name: "sawtooth-seth-standalone-server-application"
-
-        brooklyn.parameters:
-          - name: sawtooth.version
-            description: "Sawtooth Version"
-            type: string
-            default: "latest"
-          - name: sawtooth.repository
-            description: "Sawtooth Repository"
-            type: string
-            default: "sawtooth"
-          - name: sawtooth.network
-            description: "Network Name"
-            type: string
-            default: "sawtooth"
-          - name: sawtooth.network.cidr
-            description: "Network CIDR"
-            type: string
-            default: "10.0.0.0/24"
-          - name: sawtooth.network.gw
-            description: "Network Gateway"
-            type: string
-            default: "10.0.0.1"
-
-        brooklyn.children:
-          - type: sawtooth-seth-server-node
-            name: "sawtooth-seth-server-node"
-            id: sawtooth-seth-server-node
-            brooklyn.config:
-              network.enable: false
-
-        brooklyn.enrichers:
-          - type: org.apache.brooklyn.enricher.stock.Propagator
-            brooklyn.config:
-              uniqueTag: rest-api-main-uri-propagator
-              producer: $brooklyn:component("sawtooth-seth-server-node")
-              sensorMapping:
-                $brooklyn:sensor("sawtooth.rest-api.uri"): $brooklyn:sensor("main.uri")
-
     - id: sawtooth-cluster-application
       description: |
         Hyperledger Sawtooth cluster application.
@@ -112,11 +20,11 @@ brooklyn.catalog:
           - name: sawtooth.version
             description: "Sawtooth Version"
             type: string
-            default: "latest"
+            default: "1.0"
           - name: sawtooth.repository
             description: "Sawtooth Repository"
             type: string
-            default: "sawtooth"
+            default: "hyperledger"
           - name: sawtooth.size
             description: "Cluster Size"
             type: integer
@@ -188,11 +96,19 @@ brooklyn.catalog:
           - name: sawtooth.version
             description: "Sawtooth Version"
             type: string
-            default: "latest"
+            default: "1.0"
           - name: sawtooth.repository
             description: "Sawtooth Repository"
             type: string
-            default: "sawtooth"
+            default: "hyperledger"
+          - name: seth.version
+            description: "Seth Version"
+            type: string
+            default: "0.2.3"
+          - name: seth.repository
+            description: "Seth Repository"
+            type: string
+            default: "hyperledger"
           - name: sawtooth.size
             description: "Cluster Size"
             type: integer
@@ -274,8 +190,9 @@ brooklyn.catalog:
       description: |
         The Hyperledger Sawtooth server node.
 
-        Initialises the network and starts an OpenVPN server. Starts an InfluxDB
-        metrics database and the Grafana dashboard with a Telegraf monitoring service.
+        Initialises the network and starts an InfluxDB metrics database and the
+        Grafana dashboard with a Telegraf monitoring service.
+        
         Exposes endpoints for the Grafana, Sawtooth REST API and Seth RPC services.
       itemType: entity
       iconUrl: "classpath://io.brooklyn.hyperledger.sawtooth:icon/sawtooth.png"
@@ -291,7 +208,6 @@ brooklyn.catalog:
 
         brooklyn.config:
           sawtooth.node: "validator"
-          network.enable: true
           shell.env:
             NETWORK: $brooklyn:config("sawtooth.network")
             SUBNET: $brooklyn:config("sawtooth.network.cidr")
@@ -300,29 +216,16 @@ brooklyn.catalog:
           provisioning.properties.hardwareId:
             $brooklyn:config("sawtooth.server-node.hardware")
           post.launch.command: |
-            if ${NETWORK_ENABLE} ; then DRIVER=overlay ; else DRIVER=bridge ; fi
-
-            echo "[SAW] Setup ${NETWORK} ${DRIVER} network (${SUBNET})"
+            echo "[SAW] Setup ${NETWORK} overlay network (${SUBNET})"
             while ! docker network inspect ${NETWORK} > /dev/null ; do
               docker network create \
-                  --driver=${DRIVER} \
+                  --driver=overlay \
                   --subnet="${SUBNET}" \
                   --gateway="${GATEWAY}" \
                   "${NETWORK}" || sleep 5
             done
 
         brooklyn.children:
-          - type: conditional-entity
-            name: "openvpn-server"
-            id: openvpn-server
-            brooklyn.config:
-              start.timeout: "forever"
-              conditional.entity.create: $brooklyn:config("network.enable")
-              conditional.entity.spec:
-                $brooklyn:entitySpec:
-                  type: openvpn-server
-                  name: "openvpn-server"
-              conditional.entity.propagate: true
           - type: influxdb
             name: "influxdb"
             id: influxdb
@@ -407,17 +310,9 @@ brooklyn.catalog:
                 name: "sawtooth-seth-accounts"
                 id: sawtooth-seth-accounts
                 brooklyn.config:
-                  latch.launch: $brooklyn:sibling("sawtooth-seth-tp").attributeWhenReady("service.isUp")
+                  latch.launch: $brooklyn:sibling("sawtooth-seth-rpc").attributeWhenReady("service.isUp")
                   sawtooth.seth-tp: $brooklyn:sibling("sawtooth-seth-tp").config("container.name")
-                  post.launch.command: |
-                    if [ ! -f "${HOME}/data/brooklyn.pem" ] ; then
-                      docker exec --workdir /data ${CONTAINER_NAME} \
-                        bash -c "openssl ecparam -genkey -name secp256k1 | openssl ec -out brooklyn.pem" > /dev/null
-                      docker exec --workdir /data ${CONTAINER_NAME} \
-                        seth account import brooklyn.pem brooklyn > /dev/null
-                      docker exec --workdir /data ${CONTAINER_NAME} \
-                        seth account create --nonce=0 --wait brooklyn > ${HOME}/brooklyn.out
-                    fi
+                  sawtooth.seth-rpc: $brooklyn:sibling("sawtooth-seth-rpc").config("container.name")
               - type: sawtooth-seth-rpc
                 name: "sawtooth-seth-rpc"
                 id: sawtooth-seth-rpc
@@ -608,179 +503,6 @@ brooklyn.catalog:
                 $brooklyn:formatString:
                   - "http://rest-api.%s:8080/"
                   - $brooklyn:config("sawtooth.network")
-
-    - id: sawtooth-remote-cluster-application
-      description: |
-        Remote Hyperledger Sawtooth cluster application.
-      itemType: entity
-      iconUrl: "classpath://io.brooklyn.hyperledger.sawtooth:icon/hyperledger.png"
-      item:
-        type: org.apache.brooklyn.entity.stock.BasicApplication
-        name: "sawtooth-remote-cluster-application"
-
-        brooklyn.parameters:
-          - name: sawtooth.version
-            description: "Sawtooth Version"
-            type: string
-            default: "latest"
-          - name: sawtooth.repository
-            description: "Sawtooth Repository"
-            type: string
-            default: "sawtooth"
-          - name: sawtooth.size
-            description: "Cluster Size"
-            type: integer
-            default: 2
-            constraints:
-              - required
-          - name: sawtooth.network
-            description: "Network Name"
-            type: string
-            default: "remote"
-          - name: sawtooth.network.cidr
-            description: "Network CIDR"
-            type: string
-            default: "10.1.0.0/24"
-          - name: sawtooth.network.gw
-            description: "Network Gateway"
-            type: string
-            default: "10.1.0.1"
-          - name: sawtooth.cluster.name
-            description: "Cluster Name"
-            type: string
-            default: "remote"
-          - name: sawtooth.network.seed
-            description: "Seed Network Name"
-            type: string
-            default: "sawtooth"
-          - name: openvpn.config
-            description: "OpenVPN Config"
-            type: string
-            constraints:
-              - required
-
-        brooklyn.children:
-          - type: etcd-node
-            name: "etcd-node"
-            id: etcd-node
-          - type: sawtooth-remote-server-node
-            name: "sawtooth-remote-server-node"
-            id: sawtooth-remote-server-node
-            brooklyn.config:
-              cluster.endpoint:
-                $brooklyn:sibling("etcd-node").attributeWhenReady("etcd.authority")
-          - type: sawtooth-validator-cluster
-            name: "sawtooth-validator-cluster"
-            id: sawtooth-validator-cluster
-            brooklyn.config:
-              cluster.endpoint:
-                $brooklyn:sibling("etcd-node").attributeWhenReady("etcd.authority")
-              latch.launch:
-                $brooklyn:ancestor("sawtooth-validator-cluster").sibling("sawtooth-remote-server-node").attributeWhenReady("service.isUp")
-              dynamiccluster.memberspec:
-                $brooklyn:entitySpec:
-                  type: sawtooth-remote-validator-node
-                  name: "sawtooth-validator-node"
-                  id: sawtooth-validator-node
-                  brooklyn.config:
-                    sawtooth.seed.validator:
-                      $brooklyn:formatString:
-                        - "%s-000.%s"
-                        - $brooklyn.config("sawtooth.cluster.name")
-                        - $brooklyn:config("sawtooth.network")
-
-        brooklyn.enrichers:
-          - type: org.apache.brooklyn.enricher.stock.Propagator
-            brooklyn.config:
-              uniqueTag: remote-rest-api-main-uri-propagator
-              producer: $brooklyn:component("sawtooth-remote-server-node")
-              sensorMapping:
-                $brooklyn:sensor("sawtooth.rest-api.uri"): $brooklyn:sensor("main.uri")
-
-    - id: sawtooth-remote-server-node
-      description: |
-        A remote Hyperledger Sawtooth server node.
-
-        Initialises the remote network and connects to the OpenVPN server. Exposes
-        endpoints for the Sawtooth REST API and Seth RPC services.
-      itemType: entity
-      iconUrl: "classpath://io.brooklyn.hyperledger.sawtooth:icon/sawtooth.png"
-      item:
-        type: sawtooth-remote-validator-node
-        name: "sawtooth-remote-server-node"
-
-        brooklyn.config:
-          sawtooth.seed.validator:
-            $brooklyn:formatString:
-              - "validator.%s"
-              - $brooklyn:config("sawtooth.seed.network")
-          shell.env:
-            NETWORK: $brooklyn:config("sawtooth.network")
-            SUBNET: $brooklyn:config("sawtooth.network.cidr")
-            GATEWAY: $brooklyn:config("sawtooth.network.gw")
-          post.launch.command: |
-            echo "[SAW] Setup ${NETWORK} overlay network (${SUBNET})"
-            docker network ls | grep "overlay.*${NETWORK}" ||
-              docker network create \
-                  --driver=overlay \
-                  --subnet="${SUBNET}" \
-                  --gateway="${GATEWAY}" \
-                  "${NETWORK}"
-
-        brooklyn.children:
-          - type: openvpn-client
-            name: "openvpn-client"
-            id: openvpn-client
-            brooklyn.config:
-              openvpn.client: $brooklyn:config("sawtooth.seed.network")
-          - type: sawtooth-rest-api
-            name: "sawtooth-rest-api"
-            id: sawtooth-rest-api
-            brooklyn.config:
-              latch.launch: $brooklyn:sibling("sawtooth-validator").attributeWhenReady("service.isUp")
-
-        brooklyn.initializers:
-          - type: org.apache.brooklyn.core.sensor.StaticSensor
-            brooklyn.config:
-              name: sawtooth.rest-api.uri
-              static.value:
-                $brooklyn:formatString:
-                  - "http://%s:8080/blocks"
-                  - $brooklyn:attributeWhenReady("host.address")
-          - type: org.apache.brooklyn.core.sensor.StaticSensor
-            brooklyn.config:
-              name: sawtooth.seth-rpc.uri
-              static.value:
-                $brooklyn:formatString:
-                  - "http://%s:3030/"
-                  - $brooklyn:attributeWhenReady("host.address")
-
-    - id: sawtooth-remote-validator-node
-      description: |
-        A remote Hyperledger Sawtooth validator node.
-
-        Adds the network administration capability to child containers, to enable
-        altering their IP routing table, and starts a router service for the host.
-      itemType: entity
-      iconUrl: "classpath://io.brooklyn.hyperledger.sawtooth:icon/sawtooth.png"
-      item:
-        type: sawtooth-validator-node
-        name: "sawtooth-validator-node"
-
-        brooklyn.config:
-          container.options: "--cap-add=NET_ADMIN"
-
-        brooklyn.children:
-          - type: openvpn-router
-            name: "openvpn-router"
-            id: openvpn-router
-            brooklyn.config:
-              container.name:
-                $brooklyn:formatString:
-                  - "openvpn-router-%s"
-                  - $brooklyn:attributeWhenReady("entity.id")
-              openvpn.client: $brooklyn:config("sawtooth.seed.network")
-              openvpn.network.cidr: $brooklyn:config("sawtooth.seed.network.cidr")
 
     - id: sawtooth-rest-api
       description: |
@@ -1167,14 +889,14 @@ brooklyn.catalog:
               - "seth-tp-%s"
               - $brooklyn:attributeWhenReady("entity.id")
           image.name: "sawtooth-seth-tp"
-          image.version: $brooklyn:config("sawtooth.version")
-          image.repository: $brooklyn:config("sawtooth.repository")
+          image.version: $brooklyn:config("seth.version")
+          image.repository: $brooklyn:config("seth.repository")
 
           shell.env:
             NODE: $brooklyn:config("sawtooth.node")
 
-          customise.command: |
-            mkdir ${HOME}/data
+          customize.command: |
+            mkdir -p ${HOME}/sawtooth/keys
 
           launch.command: |
             docker run \
@@ -1183,12 +905,11 @@ brooklyn.catalog:
                 --network ${NETWORK} \
                 -d \
                 -p 4004 \
-                -v "${HOME}/data:/data" \
+                -v "${HOME}/sawtooth:/root/.sawtooth" \
                 ${CONTAINER_OPTIONS} \
                 ${IMAGE} \
                 seth-tp -vv \
-                    --connect tcp://${NODE}.${NETWORK}:4004 \
-                    --listen tcp://*:4004
+                    --connect tcp://${NODE}.${NETWORK}:4004
 
     - id: sawtooth-seth-accounts
       description: |
@@ -1206,8 +927,8 @@ brooklyn.catalog:
               - "seth-accounts-%s"
               - $brooklyn:attributeWhenReady("entity.id")
           image.name: "sawtooth-seth-cli"
-          image.version: $brooklyn:config("sawtooth.version")
-          image.repository: $brooklyn:config("sawtooth.repository")
+          image.version: $brooklyn:config("seth.version")
+          image.repository: $brooklyn:config("seth.repository")
 
           shell.env:
             VOLUMES_FROM:
@@ -1215,6 +936,7 @@ brooklyn.catalog:
                 - "--volumes-from %s"
                 - $brooklyn:config("sawtooth.seth-tp")
             SETH_TP: $brooklyn:config("sawtooth.seth-tp")
+            SETH_RPC: $brooklyn:config("sawtooth.seth-rpc")
 
           launch.command: |
             docker run \
@@ -1227,7 +949,7 @@ brooklyn.catalog:
                 ${CONTAINER_OPTIONS} \
                 ${IMAGE} \
                 bash -c "\
-                    seth init http://rest-api.${NETWORK}:8080 ; \
+                    seth config init --url http://${SETH_RPC}:3030 ; \
                     bash"
 
         brooklyn.initializers:
@@ -1239,13 +961,11 @@ brooklyn.catalog:
                 alias:
                   description: "The account alias"
               command: |
-                [ -f "${HOME}/data/${alias}.pem" ] && exit 1
-                docker exec --workdir /data ${CONTAINER_NAME} \
-                  bash -c "openssl ecparam -genkey -name secp256k1 | openssl ec -out ${alias}.pem" > /dev/null
-                docker exec --workdir /data ${CONTAINER_NAME} \
-                  seth account import ${alias}.pem ${alias} > /dev/null
-                docker exec --workdir /data ${CONTAINER_NAME} \
-                  seth account create --nonce=0 --wait ${alias}
+                [ -f "${HOME}/sawtooth/keys/${alias}.pem" ] && exit 1
+                docker exec ${CONTAINER_NAME} \
+                  bash -c "cd /root/.sawtooth/keys ; openssl ecparam -genkey -name secp256k1 | openssl ec -out ${alias}.pem"
+                account_id=$(docker exec ${CONTAINER_NAME} seth account import /root/.sawtooth/keys/${alias}.pem)
+                docker exec ${CONTAINER_NAME} seth account unlock ${account_id}
 
     - id: sawtooth-seth-rpc
       description: |
@@ -1265,8 +985,8 @@ brooklyn.catalog:
               - "seth-rpc-%s"
               - $brooklyn:attributeWhenReady("entity.id")
           image.name: "sawtooth-seth-rpc"
-          image.version: $brooklyn:config("sawtooth.version")
-          image.repository: $brooklyn:config("sawtooth.repository")
+          image.version: $brooklyn:config("seth.version")
+          image.repository: $brooklyn:config("seth.repository")
 
           shell.env:
             NODE: $brooklyn:config("sawtooth.node")
@@ -1289,15 +1009,10 @@ brooklyn.catalog:
                 ${CONTAINER_OPTIONS} \
                 ${IMAGE} \
                 bash -c "\
-                  [ -L ~root/.sawtooth ] || ln -s /data ~root/.sawtooth ; \
-                  cd /data ; \
-                  accounts=\$(ls *.pem | cut -d. -f1 | paste -d\  -s -) ; \
                   seth-rpc \
                     -vv \
                     --bind 0.0.0.0:3030 \
-                    --connect tcp://${NODE}.${NETWORK}:4004 \
-                    --process tcp://${SETH_TP}.${NETWORK}:4004 \
-                    --unlock \$accounts"
+                    --connect tcp://${NODE}.${NETWORK}:4004"
 
     - id: sawtooth-poet-validator-registry-tp
       description: |
@@ -1343,7 +1058,8 @@ brooklyn.catalog:
         brooklyn.config:
           container.name: "influxdb"
           image.name: "sawtooth-stats-influxdb"
-          image.repository: $brooklyn:config("sawtooth.repository")
+          image.repository: "grkvlt"
+          image.version: "1.0.5"
 
           launch.command: |
             docker run \
@@ -1367,7 +1083,8 @@ brooklyn.catalog:
         brooklyn.config:
           container.name: "grafana"
           image.name: "sawtooth-stats-grafana"
-          image.repository: $brooklyn:config("sawtooth.repository")
+          image.repository: "grkvlt"
+          image.version: "1.0.5"
 
           launch.command: |
             docker run \

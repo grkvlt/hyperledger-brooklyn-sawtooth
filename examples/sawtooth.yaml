@@ -11,8 +11,6 @@ services:
     name: "sawtooth-cluster"
 
     brooklyn.config:
-      sawtooth.version: "1.0.5"
-      sawtooth.repository: "blockchaintp"
       sawtooth.size: 4
       sawtooth.network: "example"
       sawtooth.network.cidr: "10.0.0.0/22"

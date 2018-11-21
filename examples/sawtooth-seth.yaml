@@ -3,7 +3,7 @@ name: "sawtooth-seth-example"
 description: |
   Example Sawtooth Seth cluster.
 
-location: <add-location-here>
+location: amazon-dublin
 
 services:
   - type: sawtooth-seth-cluster-application
@@ -11,9 +11,8 @@ services:
     name: "sawtooth-seth-cluster"
 
     brooklyn.config:
-      sawtooth.version: "1.0.5"
-      sawtooth.repository: "blockchaintp"
-      sawtooth.size: 4
+      seth.repository: "grkvlt"
+      sawtooth.size: 2
       sawtooth.network: "example"
       sawtooth.network.cidr: "10.0.0.0/22"
       sawtooth.network.gw: "10.0.0.1"
